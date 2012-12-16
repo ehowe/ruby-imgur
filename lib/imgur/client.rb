@@ -22,6 +22,21 @@ class Imgur::Client < Cistern::Service
       @connection                      = Excon.new(@url.to_s)
     end
 
+    def refresh_token
+      response = RestClient.post(
+        @url.to_s + @token_path,
+        :client_id     => @config[:client_id],
+        :client_secret => @config[:client_secret],
+        :refresh_token => @config[:refresh_token],
+        :grant_type    => "refresh_token",
+      )
+      new_params = @parser.load(response)
+      @config[:access_token] = new_params["access_token"]
+      @config[:refresh_token] = new_params["refresh_token"]
+      File.open(File.expand_path("~/.imgurrc"), "w") { |f| YAML.dump(@config, f) }
+      return true
+    end
+
     def request(options={})
       method  = (options[:method] || :get).to_s.downcase
       path    = "/3#{options[:path]}" || "/3"
@@ -54,11 +69,7 @@ class Imgur::Client < Cistern::Service
       options        = {:method => method, :path => path, :headers => headers}
       response       = @connection.request(options)
       response       = if response.status == 403
-                         post_params             = "?client_id=#{@config[:client_id]}&client_secret=#{@config[:client_secret]}&refresh_token=#{@config[:refresh_token]}&grant_type=refresh_token"
-                         new_params              = parser.load(@connection.request(:method => "post", :path => @token_path + post_params).body)
-                         @config[:access_token]  = new_params["access_token"]
-                         @config[:refresh_token] = new_params["refresh_token"]
-                         File.open(File.expand_path("~/.imgurrc"), 'w') { |f| YAML.dump(@config, f) }
+                         self.refresh_token
                          @connection.request(options).body
                        else
                          response.body

@@ -3,6 +3,8 @@ require 'cistern'
 require 'logger'
 require 'excon'
 require 'launchy'
+require 'yaml'
+require 'rest-client'
 
 module Imgur
   DEFAULT_TIMEOUT = 60
