@@ -46,14 +46,5 @@ module Imgur::PagedCollection
     response = connection.send(self.collection_request, params)
 
     collection = self.clone.load(response.body[self.collection_root])
-
-    collection.attributes.clear
-
-    links = response.headers['Link'].split(", ").inject({}) do |r, link|
-      value, key = link.match(/<(.*)>; rel="(\w+)"/).captures
-      r.merge("#{key}_link" => value)
-    end
-
-    collection.merge_attributes(links)
   end
 end

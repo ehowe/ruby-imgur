@@ -1,8 +1,8 @@
 require 'imgur/version'
 require 'cistern'
-require 'rack/client'
 require 'logger'
-require 'oauth'
+require 'excon'
+require 'launchy'
 
 module Imgur
   DEFAULT_TIMEOUT = 60

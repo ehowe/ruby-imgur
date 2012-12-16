@@ -2,6 +2,7 @@ class Imgur::Client::Image < Imgur::Model
   identity :id
 
   attribute :title
+  attribute :link
   attribute :datetime,               type: :integer
   attribute :mime_type, alias: :type
   attribute :animated,               type: :boolean
@@ -15,4 +16,8 @@ class Imgur::Client::Image < Imgur::Model
   attribute :downs,                  type: :integer
   attribute :score,                  type: :integer
   attribute :is_album,               type: :boolean
+
+  def open_in_browser
+    Launchy.open(link)
+  end
 end

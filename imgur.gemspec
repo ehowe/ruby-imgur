@@ -16,8 +16,8 @@ Gem::Specification.new do |gem|
   gem.version       = Imgur::VERSION
 
   gem.add_dependency "multi_json"
-  gem.add_dependency "rack-client"
   gem.add_dependency "cistern", "~> 0.1.3"
   gem.add_dependency "addressable"
-  gem.add_dependency "oauth"
+  gem.add_dependency "excon"
+  gem.add_dependency "launchy"
 end

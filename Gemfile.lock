@@ -4,21 +4,30 @@ PATH
     imgur (0.01)
       addressable
       cistern (~> 0.1.3)
+      excon
+      launchy
       multi_json
-      oauth
-      rack-client
 
 GEM
   remote: http://rubygems.org/
   specs:
     addressable (2.3.2)
+    awesome_print (1.1.0)
     cistern (0.1.4)
+    coderay (1.0.8)
     diff-lcs (1.1.3)
+    excon (0.16.10)
+    launchy (2.1.2)
+      addressable (~> 2.3)
+    method_source (0.8.1)
     multi_json (1.5.0)
-    oauth (0.4.7)
-    rack (1.4.1)
-    rack-client (0.4.0)
-      rack (>= 1.0.0)
+    pry (0.9.10)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.3.1)
+    pry-nav (0.2.2)
+      pry (~> 0.9.10)
+    rake (10.0.2)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -27,11 +36,16 @@ GEM
     rspec-expectations (2.12.0)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.12.0)
+    slop (3.3.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
   bundler
   imgur!
+  pry
+  pry-nav
+  rake
   rspec

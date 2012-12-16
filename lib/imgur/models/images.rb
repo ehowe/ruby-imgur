@@ -5,8 +5,8 @@ class Imgur::Client::Images < Cistern::Collection
   model Imgur::Client::Image
 
   model_root "data"
-  model_request :get_volume
+  model_request :get_image
 
-  collection_root "images"
+  collection_root "data"
   collection_request :get_images
 end
