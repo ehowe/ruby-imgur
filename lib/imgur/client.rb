@@ -5,10 +5,16 @@ class Imgur::Client < Cistern::Service
 
   model :image
   collection :images
+  request :get_image
   request :get_images
 
+  model :album
+  collection :albums
+  request :get_album
+  request :get_albums
+
   class Real
-    attr_accessor :url, :path, :connection, :parser, :logger, :config, :authorize_path, :token_path
+    attr_accessor :url, :path, :parser, :logger, :config, :authorize_path, :token_path
 
     def initialize(options={})
       @config                          = options[:config] || YAML.load_file(File.expand_path("~/.imgurrc")) || YAML.load_file("config/config.yml")
@@ -17,9 +23,11 @@ class Imgur::Client < Cistern::Service
       @url                             = URI.parse(options[:url]  || "https://api.imgur.com")
       @logger                          = options[:logger]         || Logger.new(nil)
       @parser                          = begin; require 'json'; JSON; end
+    end
 
-      Excon.defaults[:ssl_verify_peer] = false
-      @connection                      = Excon.new(@url.to_s)
+    def reset!
+      @config     = nil
+      @config     = YAML.load_file(File.expand_path("~/.imgurrc"))
     end
 
     def refresh_token
@@ -34,12 +42,13 @@ class Imgur::Client < Cistern::Service
       @config[:access_token] = new_params["access_token"]
       @config[:refresh_token] = new_params["refresh_token"]
       File.open(File.expand_path("~/.imgurrc"), "w") { |f| YAML.dump(@config, f) }
+      self.reset!
       return true
     end
 
     def request(options={})
       method  = (options[:method] || :get).to_s.downcase
-      path    = "/3#{options[:path]}" || "/3"
+      path    =  @url.to_s + ("/3#{options[:path]}" || "/3")
       query   = options[:query] || {}
       unless @config[:access_token]
         Launchy.open(@url.to_s + @authorize_path + "?client_id=#{@config[:client_id]}&response_type=token")
@@ -66,14 +75,12 @@ class Imgur::Client < Cistern::Service
                      end
       request_body ||= options[:params] || {}
       path           = "#{path}?#{query.map{|k,v| "#{URI.escape(k.to_s)}=#{URI.escape(v.to_s)}"}.join("&")}" unless query.empty?
-      options        = {:method => method, :path => path, :headers => headers}
-      response       = @connection.request(options)
-      response       = if response.status == 403
-                         self.refresh_token
-                         @connection.request(options).body
-                       else
-                         response.body
-                       end
+      begin
+        response = RestClient.send(method, path, headers)
+      rescue RestClient::Forbidden
+        self.refresh_token
+        retry
+      end
       parsed_body    = response.strip.empty? ? {} : parser.load(response)
       status         = parsed_body.delete("status")
       Imgur::Response.new(status, {}, parsed_body).raise!

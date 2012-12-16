@@ -1,7 +1,8 @@
 class Imgur::Client
   class Real
-    def get_images(params={})
-      path = params[:path]
+    def get_image(id)
+      path = "/#{id}"
+
       request(
         :method => :get,
         :path   => path,

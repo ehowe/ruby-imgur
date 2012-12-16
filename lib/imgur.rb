@@ -1,7 +1,6 @@
 require 'imgur/version'
 require 'cistern'
 require 'logger'
-require 'excon'
 require 'launchy'
 require 'yaml'
 require 'rest-client'

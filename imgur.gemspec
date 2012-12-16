@@ -18,7 +18,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "multi_json"
   gem.add_dependency "cistern", "~> 0.1.3"
   gem.add_dependency "addressable"
-  gem.add_dependency "excon"
   gem.add_dependency "launchy"
   gem.add_dependency "rest-client"
 end
