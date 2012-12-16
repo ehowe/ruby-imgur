@@ -5,7 +5,7 @@ Library to interface with the imgur API.
 == Usage
 
   1. Register your application with imgur at https://api.imgur.com/oauth2/addclient
-  2. Place a file in your user's $HOME directory with the following contents
+  2. Place a file called .imgurrc in your user's $HOME directory with the following contents
     :client_id: "client_id_from_registering_app"
     :client_secret: "client_secret_from_registering_app"
     :account_username: "username_of_imgur_account"
@@ -22,8 +22,6 @@ Examples:
        ...
        [173] #<Imgur::Client::Image:0x7fa55ad4a5b0 attributes={id:"CmIrs",title:"Day officially made",datetime:1355595301,animated:false,width:245,height:176,size:899725,views:21774,bandwidth:19590612150,account_url:"idontwantoliveonthisplanetanymore",link:"http://i.imgur.com/CmIrs.gif",ups:269,downs:6,score:273,is_album:false}>
      ]
-
-A File needs to be put in your user's $HOME directory with the following contents
 
 == Contributing to imgur
  
