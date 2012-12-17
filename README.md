@@ -6,11 +6,11 @@ Library to interface with the imgur API.
 
 1. Register your application with imgur at https://api.imgur.com/oauth2/addclient
 2. Place a file called .imgurrc in your user's $HOME directory with the following contents
-  ```ruby
+  <pre>
   :client_id: "client_id_from_registering_app"
   :client_secret: "client_secret_from_registering_app"
   :account_username: "username_of_imgur_account"
-  ```
+  </pre>
 3. On first run, you will be presented with a browser window asking you to allow access to your account, do this.
 4. After approval, you will be prompted to enter both the access_token and refresh_token values, which can be retrieved from the URL of the page you are redirected to
 
@@ -34,6 +34,7 @@ Library to interface with the imgur API.
   client = Imgur::Client.new
   image = client.images.all.first
   image.open_in_browser
+  ```
 
 ## Contributing to imgur
  
