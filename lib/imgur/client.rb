@@ -99,6 +99,13 @@ class Imgur::Client < Cistern::Service
       Imgur::Response.new(status, {}, parsed_body).raise!
     end
 
+    def credits
+      response = request(
+        method: :get,
+        path: "/credits"
+      ).body["data"]
+      "#{response["UserRemaining"]}/#{response["UserLimit"]}"
+    end
   end
 
   class Mock
