@@ -24,4 +24,18 @@ class Imgur::Client::Images < Cistern::Collection
     data = connection.get_images(path: path).body["data"]
     connection.images.load(data)
   end
+
+  def upload(options={})
+    raise ArgumentError, ":image is missing: File name or URL requrired" unless options[:image]
+    options[:image] = case options[:image]
+                      when /^(http|ftp)/
+                        options[:image]
+                      when /\.(jp(e)?g|gif|bmp|png|tif(f)?)$/i
+                        options[:upload] = :image
+                        File.open(options[:image], "rb")
+                      else
+                        raise ArgumentError, "Invalid image value"
+                      end
+    data = connection.upload_image(options)
+  end
 end

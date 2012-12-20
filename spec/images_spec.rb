@@ -8,4 +8,10 @@ describe "images" do
     images.should_not be_empty
     images.first.should be_a_kind_of(Imgur::Client::Image)
   end
+
+  it "should upload an image" do
+    image = File.expand_path("")
+    response = client.images.upload(:image => image)
+    response.should be_successful
+  end
 end
