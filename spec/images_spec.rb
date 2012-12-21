@@ -10,8 +10,8 @@ describe "images" do
   end
 
   it "should upload an image" do
-    image = File.expand_path("")
+    image = File.expand_path("spec/support/ruby_logo.jpg")
     response = client.images.upload(:image => image)
-    response.should be_successful
+    response.should be_a_kind_of(Imgur::Client::Image)
   end
 end

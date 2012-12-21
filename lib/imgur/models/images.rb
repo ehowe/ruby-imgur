@@ -32,10 +32,11 @@ class Imgur::Client::Images < Cistern::Collection
                         options[:image]
                       when /\.(jp(e)?g|gif|bmp|png|tif(f)?)$/i
                         options[:upload] = :image
-                        File.open(options[:image], "rb")
+                        File.open(options[:image], 'rb')
                       else
                         raise ArgumentError, "Invalid image value"
                       end
-    data = connection.upload_image(options)
+    data = connection.upload_image(options).body
+    connection.images.new(data)
   end
 end

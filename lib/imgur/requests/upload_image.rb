@@ -1,7 +1,7 @@
 class Imgur::Client
   class Real
     def upload_image(options)
-      path = "/image"
+      path = "/upload"
 
       request(
         :method => :post,

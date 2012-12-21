@@ -72,14 +72,9 @@ class Imgur::Client < Cistern::Service
         "Authorization" => "Bearer #{@config[:access_token]}",
       }.merge(options[:headers] || {})
 
-      request_body = if body        = options[:body]
-                       json_body    = parser.dump(body)
-                       headers      = {
-                         "Content-Type"   => "application/json, charset=utf-8",
-                         "Content-Length" => json_body.size.to_s,
-                       }.merge(options[:headers] || {})
-
-                       json_body
+      request_body = if body = options[:body]
+                       headers.merge!("Content-Type" => "application/json, charset=utf-8", "Content-Length" => body.to_s.size.to_s,)
+                       body
                      end
       request_body ||= options[:params] || {}
       path           = "#{path}?#{query.map{|k,v| "#{URI.escape(k.to_s)}=#{URI.escape(v.to_s)}"}.join("&")}" unless query.empty?
@@ -88,7 +83,7 @@ class Imgur::Client < Cistern::Service
                    when "get"
                      @connection[path].get(headers)
                    when "post"
-                     @connection[path].post(image: options[:body][:image])
+                     @connection[path].post(request_body, headers)
                    end
       rescue RestClient::Forbidden => e
         self.refresh_token
