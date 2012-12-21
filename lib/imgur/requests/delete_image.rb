@@ -1,10 +1,10 @@
 class Imgur::Client
   class Real
-    def get_image(id)
-      path = "/image/#{id["id"]}"
+    def delete_image(deletehash)
+      path = "/image/#{deletehash}"
 
       request(
-        :method => :get,
+        :method => :delete,
         :path   => path,
       )
     end

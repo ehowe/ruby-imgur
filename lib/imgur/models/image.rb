@@ -16,8 +16,14 @@ class Imgur::Client::Image < Imgur::Model
   attribute :downs,                  type: :integer
   attribute :score,                  type: :integer
   attribute :is_album,               type: :boolean
+  attribute :deletehash
 
   def open_in_browser
     Launchy.open(link)
+  end
+
+  def delete
+    data = connection.delete_image(deletehash).body
+    connection.basic_responses.new(data)
   end
 end

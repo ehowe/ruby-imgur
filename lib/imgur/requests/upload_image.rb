@@ -6,7 +6,6 @@ class Imgur::Client
       request(
         :method => :post,
         :path   => path,
-        :upload => options.delete(:upload),
         :body   => options,
       )
     end

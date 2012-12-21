@@ -8,6 +8,7 @@ class Imgur::Client < Cistern::Service
   request :get_image
   request :get_images
   request :upload_image
+  request :delete_image
 
   model :album
   collection :albums
@@ -18,6 +19,9 @@ class Imgur::Client < Cistern::Service
   collection :accounts
   request :get_accounts
   request :get_account
+
+  model :basic_response
+  collection :basic_responses
 
   class Real
     attr_accessor :url, :path, :parser, :logger, :config, :authorize_path, :token_path, :connection
@@ -84,6 +88,8 @@ class Imgur::Client < Cistern::Service
                      @connection[path].get(headers)
                    when "post"
                      @connection[path].post(request_body, headers)
+                   when "delete"
+                     @connection[path].delete(headers)
                    end
       rescue RestClient::Forbidden => e
         self.refresh_token

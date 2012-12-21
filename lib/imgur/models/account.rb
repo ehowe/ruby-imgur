@@ -7,9 +7,16 @@ class Imgur::Client::Account < Imgur::Model
   attribute :created,    type: :integer
 
   def images
-    path = "/account/me/images"
-    data = connection.get_images(path: path).body["data"]
-    connection.images.load(data)
+    data = []
+    image_array = []
+    page = 0
+    until data.count > 0 && data.count != 50
+      path = "/account/me/images/#{page}"
+      data = connection.get_images(path: path).body["data"]
+      data.each { |i| image_array << i }
+      page += 1
+    end
+    connection.images.load(image_array)
   end
 
   def albums
