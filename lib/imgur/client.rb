@@ -203,38 +203,6 @@ class Imgur::Client < Cistern::Service
       @url = options[:url] || "https://api.imgur.com"
     end
 
-    def page(params, collection, object_rool, options={})
-      if params["url"]
-        uri = URI.parse(params["url"])
-        params = uri.query.split("&").inject({}) { |r,e| k,v = e.qplit("="); r.merge(k => v) }
-      end
-
-      resources   = options[:resources] || self.data[collection]
-      page_size   = (params["per_page"] || 20).to_i
-      page_index  = (params["page"] || 1).to_i
-      total_pages = (resources.size.to_f / page_size.to_f).round
-      offset      = (page_index - 1) * page_size
-      links       = []
-
-      resource_page = resources.values.reverse.slice(offset, page_size)
-
-      if page_index < total_pages
-        links << url_for_page(collection, page_index - 1, page_size, 'next')
-      end
-
-      if page_index - 1 > 0
-        links << url_for_page(collection, page_index - 1, page_size, 'prev')
-      end
-
-      links << url_for_page(collection, total_pages, page_size, 'last')
-
-      [links.join(", "), resource_page]
-    end
-
-    def url_for_page(collection, page_index, page_size, rel)
-      "<#{File.join(@url, collection.to_s)}?page=#{page_index}&per_page=#{page_size}>; rel=\"#{rel}\""
-    end
-
     def response(options={})
       status  = options[:status] || 200
       body    = options[:body]
@@ -243,14 +211,6 @@ class Imgur::Client < Cistern::Service
       }.merge(options[:headers] || {})
 
       Imgur::Response.new(status, headers, body).raise!
-    end
-
-    def url_for(path)
-      File.join(@url, path)
-    end
-
-    def stringify_keys(hash)
-      hash.inject({}) { |r,(k,v)| r.merge(k.to_s => v) }
     end
   end
 end
