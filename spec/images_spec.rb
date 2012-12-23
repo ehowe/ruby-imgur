@@ -11,8 +11,11 @@ describe "images" do
 
   it "should upload an image from filesystem" do
     image = File.expand_path("spec/support/ruby_logo.jpg")
-    response = client.images.upload(image: image, title: "ruby_logo_jpg")
+    title = "ruby_logo_jpg"
+    response = client.images.upload(image: image, title: title)
     response.should be_a_kind_of(Imgur::Client::Image)
+    image = client.images.get(response.id)
+    image.title.should == title
 
     response = response.delete
     response.should be_a_kind_of(Imgur::Client::BasicResponse)
@@ -20,8 +23,11 @@ describe "images" do
 
   it "should upload an image from the internet" do
     image = "http://www.ruby-lang.org/images/logo.gif"
-    response = client.images.upload(image: image, title: "ruby_logo_gif")
+    title = "ruby_logo_gif"
+    response = client.images.upload(image: image, title: title)
     response.should be_a_kind_of(Imgur::Client::Image)
+    image = client.images.get(response.id)
+    image.title.should == title
 
     response = response.delete
     response.should be_a_kind_of(Imgur::Client::BasicResponse)

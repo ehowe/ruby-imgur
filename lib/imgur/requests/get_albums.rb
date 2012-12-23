@@ -8,4 +8,17 @@ class Imgur::Client
       )
     end
   end
+
+  class Mock
+    def get_albums(params={})
+      albums = self.data[:albums].values
+      albums = if params[:path] =~ /^\/account/
+                 {"data" => albums.select { |a| !a["account_id"].nil? } }
+               else
+                 {"data" => albums}
+               end
+
+      response(body: albums)
+    end
+  end
 end

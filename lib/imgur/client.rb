@@ -110,8 +110,77 @@ class Imgur::Client < Cistern::Service
   end
 
   class Mock
+    def self.random_id
+      characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+      selection  = ''
+      7.times do
+        position = rand(characters.length)
+        selection << characters[position..position]
+      end
+      selection
+    end
+
+    def self.random_number
+      characters = '1234567890'
+      selection  = ''
+      7.times do
+        position = rand(characters.length)
+        selection << characters[position..position]
+      end
+      selection.to_i
+    end
+
     def self.data
-      @data ||= {}
+      @data ||= begin
+                  image_id     = random_id
+                  account_id   = random_number
+                  account_name = random_id
+                  album_id     = random_id
+
+                  account = {
+                    "id"         => account_id,
+                    "url"        => "#{account_name}.imgur.com",
+                    "bio"        => nil,
+                    "reputation" => 435.5,
+                    "created"    => 1349051610,
+                  }
+
+                  image = {
+                    "id"         => image_id,
+                    "title"      => "test image",
+                    "datetime"   => 1349051625,
+                    "type"       => "image/jpeg",
+                    "animated"   => false,
+                    "width"      => 2490,
+                    "height"     => 3025,
+                    "size"       => 618969,
+                    "views"      => 625622,
+                    "bandwidth"  => 387240623718,
+                    "ups"        => 1889,
+                    "downs"      => 58,
+                    "score"      => 18935622,
+                    "account_id" => account_id,
+                  }
+
+                  album = {
+                    "id"          => album_id,
+                    "title"       => "test album",
+                    "description" => nil,
+                    "privacy"     => "public",
+                    "cover"       => image_id,
+                    "order"       => 0,
+                    "layout"      => "blog",
+                    "datetime"    => 1347058832,
+                    "link"        => "https://imgur.com/a/#{album_id}",
+                    "account_id"  => account_id,
+                  }
+
+                  {
+                    :images => {image_id => image},
+                    :accounts => {account_id => account},
+                    :albums => {album_id => album},
+                  }
+                end
     end
 
     def self.reset!
@@ -122,7 +191,15 @@ class Imgur::Client < Cistern::Service
       self.class.data
     end
 
-    def initalize(options={})
+    def random_id
+      self.class.random_id
+    end
+
+    def credits
+      "980/1000"
+    end
+
+    def initialize(options={})
       @url = options[:url] || "https://api.imgur.com"
     end
 

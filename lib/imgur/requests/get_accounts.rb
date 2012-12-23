@@ -8,4 +8,11 @@ class Imgur::Client
       )
     end
   end
+
+  class Mock
+    def get_accounts(params={})
+      accounts = self.data[:accounts].values.first
+      response(body: {"data" => accounts})
+    end
+  end
 end

@@ -9,4 +9,12 @@ class Imgur::Client
       )
     end
   end
+
+  class Mock
+    def get_image(id)
+      image = self.data[:images][id["id"]]
+
+      response(:body => {"data" => image})
+    end
+  end
 end
