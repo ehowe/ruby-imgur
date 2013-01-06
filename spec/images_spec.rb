@@ -9,6 +9,12 @@ describe "images" do
     images.first.should be_a_kind_of(Imgur::Client::Image)
   end
 
+  it "should have comments" do
+    image = client.images.all.first
+    image.comments.should_not be_empty
+    image.comments.first.should be_a_kind_of(Imgur::Client::Comment)
+  end
+
   it "should upload an image from filesystem" do
     image = File.expand_path("spec/support/ruby_logo.jpg")
     title = "ruby_logo_jpg"

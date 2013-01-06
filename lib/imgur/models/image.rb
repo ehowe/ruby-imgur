@@ -26,4 +26,10 @@ class Imgur::Client::Image < Imgur::Model
     data = connection.delete_image(deletehash).body
     connection.basic_responses.new(data)
   end
+
+  def comments
+    type = is_album ? "album" : "image"
+    data = connection.get_comments(type: type, id: id).body["data"]
+    connection.comments.load(data)
+  end
 end

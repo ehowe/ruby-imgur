@@ -20,6 +20,11 @@ class Imgur::Client < Cistern::Service
   request :get_accounts
   request :get_account
 
+  model :comment
+  collection :comments
+  request :get_comments
+  request :get_comment
+
   model :basic_response
   collection :basic_responses
 
@@ -136,6 +141,7 @@ class Imgur::Client < Cistern::Service
                   account_id   = random_number
                   account_name = random_id
                   album_id     = random_id
+                  comment_id   = random_id
 
                   account = {
                     "id"         => account_id,
@@ -175,10 +181,26 @@ class Imgur::Client < Cistern::Service
                     "account_id"  => account_id,
                   }
 
+                  comment = {
+                    "id"        => comment_id,
+                    "image_id"  => image_id,
+                    "author"    => account_name,
+                    "author_id" => account_id,
+                    "on_album"  => false,
+                    "ups"       => 10,
+                    "downs"     => 2,
+                    "points"    => 23.4,
+                    "datetime"  => 1349051670,
+                    "parent_id" => 2,
+                    "deleted"   => false,
+                    "children"  => [],
+                  }
+
                   {
-                    :images => {image_id => image},
+                    :images   => {image_id   => image},
                     :accounts => {account_id => account},
-                    :albums => {album_id => album},
+                    :albums   => {album_id   => album},
+                    :comments => {comment_id => comment},
                   }
                 end
     end
