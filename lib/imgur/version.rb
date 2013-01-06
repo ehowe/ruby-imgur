@@ -1,3 +1,3 @@
 module Imgur
-  VERSION = "0.01"
+  VERSION = "0.04"
 end
