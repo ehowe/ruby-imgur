@@ -9,6 +9,7 @@ class Imgur::Client < Cistern::Service
   request :get_images
   request :upload_image
   request :delete_image
+  request :add_to_gallery
 
   model :album
   collection :albums

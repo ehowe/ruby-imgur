@@ -38,4 +38,8 @@ class Imgur::Client::Image < Imgur::Model
     data = connection.add_comment({type: type, id: id}, comment).body["data"]
     connection.comments.get(data["id"])
   end
+
+  def add_to_gallery(options = {})
+    connection.add_to_gallery(id, options)
+  end
 end

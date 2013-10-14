@@ -38,4 +38,5 @@ class Imgur::Client::Images < Cistern::Collection
     data = connection.upload_image(options).body["data"]
     connection.images.new(data)
   end
+
 end
