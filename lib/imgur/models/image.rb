@@ -36,5 +36,6 @@ class Imgur::Client::Image < Imgur::Model
   def add_comment(comment)
     type = is_album ? "album" : "image"
     data = connection.add_comment({type: type, id: id}, comment).body["data"]
+    connection.comments.get(data["id"])
   end
 end

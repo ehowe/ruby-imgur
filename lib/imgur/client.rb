@@ -25,6 +25,7 @@ class Imgur::Client < Cistern::Service
   request :get_comments
   request :get_comment
   request :add_comment
+  request :add_comment_reply
 
   model :basic_response
   collection :basic_responses

@@ -14,4 +14,10 @@ class Imgur::Client::Comment < Imgur::Model
   attribute :parent_id, type: :integer
   attribute :deleted,   type: :boolean
   attribute :children,  type: :array
+
+  def reply(reply)
+    image_type = on_album ? "album" : "image"
+    data = connection.add_comment_reply({image_type: image_type, image_id: image_id, comment_id: id}, reply).body["data"]
+    connection.comments.get(data["id"])
+  end
 end
