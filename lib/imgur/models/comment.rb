@@ -3,6 +3,7 @@ class Imgur::Client::Comment < Imgur::Model
 
   attribute :image_id
   attribute :caption
+  attribute :comment
   attribute :author
   attribute :author_id, type: :integer
   attribute :on_album,  type: :boolean

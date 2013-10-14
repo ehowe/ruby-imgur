@@ -1,5 +1,5 @@
 class Imgur::Client < Cistern::Service
-  @recognized_arguments = [:config]
+  @recognized_arguments = [:config, :config_path]
   model_path "imgur/models"
   request_path "imgur/requests"
 
@@ -32,10 +32,11 @@ class Imgur::Client < Cistern::Service
   collection :basic_responses
 
   class Real
-    attr_accessor :url, :path, :parser, :logger, :config, :authorize_path, :token_path, :connection
+    attr_accessor :url, :path, :parser, :logger, :config, :authorize_path, :token_path, :connection, :config_path
 
     def initialize(options={})
-      @config                          = options[:config] || YAML.load_file(File.expand_path("~/.imgurrc")) || YAML.load_file("config/config.yml")
+      @config_path                     = options[:config_path] || '~/.imgurrc'
+      @config                          = options[:config] || YAML.load_file(File.expand_path(@config_path)) || YAML.load_file("config/config.yml")
       @authorize_path                  = "/oauth2/authorize"
       @token_path                      = "/oauth2/token"
       @url                             = URI.parse(options[:url]  || "https://api.imgur.com")
@@ -46,7 +47,7 @@ class Imgur::Client < Cistern::Service
 
     def reset!
       @config     = nil
-      @config     = YAML.load_file(File.expand_path("~/.imgurrc"))
+      @config     = YAML.load_file(File.expand_path(@config_path))
     end
 
     def refresh_token
@@ -60,7 +61,7 @@ class Imgur::Client < Cistern::Service
       new_params = @parser.load(response)
       @config[:access_token] = new_params["access_token"]
       @config[:refresh_token] = new_params["refresh_token"]
-      File.open(File.expand_path("~/.imgurrc"), "w") { |f| YAML.dump(@config, f) }
+      File.open(File.expand_path(@config_path), "w") { |f| YAML.dump(@config, f) }
       self.reset!
       return true
     end
@@ -77,7 +78,7 @@ class Imgur::Client < Cistern::Service
         refresh_token = $stdin.gets.strip
         @config[:access_token] = verifier
         @config[:refresh_token] = refresh_token
-        File.open(File.expand_path("~/.imgurrc"), 'w') { |f| YAML.dump(@config, f) }
+        File.open(File.expand_path(@config_path), 'w') { |f| YAML.dump(@config, f) }
       end
       headers = {
         "Accept"        => "application/json",
