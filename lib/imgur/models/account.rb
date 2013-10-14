@@ -24,4 +24,15 @@ class Imgur::Client::Account < Imgur::Model
     data = connection.get_albums(path: path).body["data"]
     connection.albums.load(data)
   end
+
+  def replies
+    data = connection.get_notifications.body["data"]["replies"]
+    connection.replies.load(data)
+  end
+
+  def messages
+    data = connection.get_notifications.body["data"]["messages"]
+    connection.replies.load(data)
+  end
+
 end

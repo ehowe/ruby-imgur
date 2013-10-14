@@ -20,6 +20,7 @@ class Imgur::Client < Cistern::Service
   collection :accounts
   request :get_accounts
   request :get_account
+  request :get_replies
 
   model :comment
   collection :comments
@@ -27,6 +28,11 @@ class Imgur::Client < Cistern::Service
   request :get_comment
   request :add_comment
   request :add_comment_reply
+
+  model :reply
+  collection :replies
+  request :mark_notification_read
+  request :get_notifications
 
   model :basic_response
   collection :basic_responses
