@@ -25,11 +25,10 @@ class Imgur::Client::Account < Imgur::Model
     connection.albums.load(data)
   end
 
-  def replies
-    data = connection.get_notifications.body["data"]["replies"]
-    connection.replies.load(data)
-  end
-
+  # @TODO NOT FULLY IMPLEMENTED
+  # returns message notifications, which in turn contain messages.  The data structure for a notification
+  # is VERY different from a message, but notifications have two types: reply and message, so it is difficult
+  # to model out in a simple way.
   def messages
     data = connection.get_notifications.body["data"]["messages"]
     connection.replies.load(data)

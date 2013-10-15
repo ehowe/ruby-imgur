@@ -5,7 +5,6 @@ class Imgur::Client::Replies < Cistern::Collection
   model Imgur::Client::Reply
 
   model_root "data"
-  model_request :get_replies
 
   collection_root "data"
 
