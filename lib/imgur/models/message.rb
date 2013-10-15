@@ -9,12 +9,4 @@ class Imgur::Client::Message < Imgur::Model
   attribute :timestamp
   attribute :parent_id, type: :int
 
-  def mark_as_read
-    connection.mark_notification_read id
-    self
-  end
-
-  def comment
-    connection.comments.new(content)
-  end
 end

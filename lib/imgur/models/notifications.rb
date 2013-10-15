@@ -14,12 +14,12 @@ class Imgur::Client::Notifications < Cistern::Collection
 
   def replies
     data = connection.get_notifications.body['data']['replies']
-    connection.replies.load(data)
+    connection.reply_notifications.load(data)
   end
 
   def messages
     data = connection.get_notifications.body['data']['messages']
-    connection.messages.load(data)
+    connection.message_notifications.load(data)
   end
 
 end

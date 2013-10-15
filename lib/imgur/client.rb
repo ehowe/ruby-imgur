@@ -28,9 +28,16 @@ class Imgur::Client < Cistern::Service
   request :add_comment
   request :add_comment_reply
 
-  model :reply
-  collection :replies
+  model :reply_notification
+  collection :reply_notifications
   request :mark_notification_read
+
+  model :message_notification
+  collection :message_notifications
+  request :mark_notification_read
+
+  model :message
+  collection :messages
 
   collection :notifications
   request :get_notifications
