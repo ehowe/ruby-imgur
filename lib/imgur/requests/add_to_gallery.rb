@@ -12,7 +12,7 @@ class Imgur::Client
   end
 
   class Mock
-    def get_image(id)
+    def add_to_gallery(id)
       image = self.data[:images][id['id']]
       response(:body => {'data' => image})
     end

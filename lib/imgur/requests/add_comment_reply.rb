@@ -30,7 +30,7 @@ class Imgur::Client
           children: []
       }
 
-      self.data.comments.values.children.push reply
+      self.data.comments.values.first.children.push reply
 
       basic_response = {
           'data'    => true,
