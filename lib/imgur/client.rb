@@ -160,6 +160,10 @@ class Imgur::Client < Cistern::Service
                   account_name = random_id
                   album_id     = random_id
                   comment_id   = random_id
+                  message_id   = random_id
+
+                  reply_notification_id   = random_number
+                  message_notification_id = random_number
 
                   account = {
                     "id"         => account_id,
@@ -214,11 +218,40 @@ class Imgur::Client < Cistern::Service
                     "children"  => [],
                   }
 
+                  message = {
+                      id:                   message_id,
+                      from:                 account_name,
+                      account_id:           account_id,
+                      recipient_account_id: account_id,
+                      subject:              'This is a sample message to you (Subject Line)',
+                      body:                 'This is the message body. It\'s what I wanted to say to you',
+                      timestamp:            '1 minute ago',
+                      parent_id:            message_id,
+                  }
+
+                  reply_notification = {
+                      id:         reply_notification_id,
+                      account_id: account_id,
+                      viewed:     false,
+                      content:    comment
+                  }
+
+                  message_notification = {
+                      id:         message_notification_id,
+                      account_id: account_id,
+                      viewed:     false,
+                      content:    message
+                  }
+
                   {
-                    :images   => {image_id   => image},
-                    :accounts => {account_id => account},
-                    :albums   => {album_id   => album},
-                    :comments => {comment_id => comment},
+                    :images        => {image_id   => image},
+                    :accounts      => {account_id => account},
+                    :albums        => {album_id   => album},
+                    :comments      => {comment_id => comment},
+                    :notifications => {
+                        replies:  [reply_notification],
+                        messages: [message_notification]
+                    }
                   }
                 end
     end

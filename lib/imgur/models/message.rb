@@ -6,7 +6,7 @@ class Imgur::Client::Message < Imgur::Model
   attribute :recipient_account_id, type: :int
   attribute :subject
   attribute :body
-  attribute :timestamp
+  attribute :timestamp, type: :string
   attribute :parent_id, type: :int
 
 end

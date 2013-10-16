@@ -9,4 +9,11 @@ class Imgur::Client
       )
     end
   end
+
+  class Mock
+    def get_comments(data)
+      comments = self.data[:comments].values
+      response(body: {'data' => comments})
+    end
+  end
 end

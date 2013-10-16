@@ -9,4 +9,15 @@ class Imgur::Client
       )
     end
   end
+
+  class Mock
+    def get_comment(id)
+      comments = self.data[:comments].values
+
+      comments.each do |comment|
+        return response(body: {'data' => comment}) if comment.id === id
+      end
+    end
+  end
+
 end

@@ -9,4 +9,11 @@ class Imgur::Client
       )
     end
   end
+
+  class Mock
+    def get_notifications
+      notifications = self.data[:notifications].values.first
+      response(body: {"data" => notifications})
+    end
+  end
 end
