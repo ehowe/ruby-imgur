@@ -15,4 +15,9 @@ class Imgur::Client::Album < Imgur::Model
     data = connection.get_images(path: url).body["data"]
     connection.images.load(data)
   end
+
+  def add_to_gallery(options = {})
+    data = connection.add_to_gallery(id, options).body['data']
+    connection.gallery_albums.new(data)
+  end
 end
