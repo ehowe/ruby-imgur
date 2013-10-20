@@ -24,4 +24,9 @@ class Imgur::Client::Account < Imgur::Model
     data = connection.get_albums(path: path).body["data"]
     connection.albums.load(data)
   end
+
+  def notifications
+    data = connection.get_notifications.body('data')
+    connection.notifications.load(data)
+  end
 end

@@ -1,5 +1,5 @@
 class Imgur::Client < Cistern::Service
-  @recognized_arguments = [:config]
+  @recognized_arguments = [:config, :config_path]
   model_path "imgur/models"
   request_path "imgur/requests"
 
@@ -9,6 +9,7 @@ class Imgur::Client < Cistern::Service
   request :get_images
   request :upload_image
   request :delete_image
+  request :add_to_gallery
 
   model :album
   collection :albums
@@ -24,15 +25,32 @@ class Imgur::Client < Cistern::Service
   collection :comments
   request :get_comments
   request :get_comment
+  request :add_comment
+  request :add_comment_reply
+
+  model :reply_notification
+  collection :reply_notifications
+  request :mark_notification_read
+
+  model :message_notification
+  collection :message_notifications
+  request :mark_notification_read
+
+  model :message
+  collection :messages
+
+  collection :notifications
+  request :get_notifications
 
   model :basic_response
   collection :basic_responses
 
   class Real
-    attr_accessor :url, :path, :parser, :logger, :config, :authorize_path, :token_path, :connection
+    attr_accessor :url, :path, :parser, :logger, :config, :authorize_path, :token_path, :connection, :config_path
 
     def initialize(options={})
-      @config                          = options[:config] || YAML.load_file(File.expand_path("~/.imgurrc")) || YAML.load_file("config/config.yml")
+      @config_path                     = options[:config_path] || '~/.imgurrc'
+      @config                          = options[:config] || YAML.load_file(File.expand_path(@config_path)) || YAML.load_file("config/config.yml")
       @authorize_path                  = "/oauth2/authorize"
       @token_path                      = "/oauth2/token"
       @url                             = URI.parse(options[:url]  || "https://api.imgur.com")
@@ -43,7 +61,7 @@ class Imgur::Client < Cistern::Service
 
     def reset!
       @config     = nil
-      @config     = YAML.load_file(File.expand_path("~/.imgurrc"))
+      @config     = YAML.load_file(File.expand_path(@config_path))
     end
 
     def refresh_token
@@ -57,7 +75,7 @@ class Imgur::Client < Cistern::Service
       new_params = @parser.load(response)
       @config[:access_token] = new_params["access_token"]
       @config[:refresh_token] = new_params["refresh_token"]
-      File.open(File.expand_path("~/.imgurrc"), "w") { |f| YAML.dump(@config, f) }
+      File.open(File.expand_path(@config_path), "w") { |f| YAML.dump(@config, f) }
       self.reset!
       return true
     end
@@ -74,7 +92,7 @@ class Imgur::Client < Cistern::Service
         refresh_token = $stdin.gets.strip
         @config[:access_token] = verifier
         @config[:refresh_token] = refresh_token
-        File.open(File.expand_path("~/.imgurrc"), 'w') { |f| YAML.dump(@config, f) }
+        File.open(File.expand_path(@config_path), 'w') { |f| YAML.dump(@config, f) }
       end
       headers = {
         "Accept"        => "application/json",
@@ -142,6 +160,10 @@ class Imgur::Client < Cistern::Service
                   account_name = random_id
                   album_id     = random_id
                   comment_id   = random_id
+                  message_id   = random_id
+
+                  reply_notification_id   = random_number
+                  message_notification_id = random_number
 
                   account = {
                     "id"         => account_id,
@@ -196,11 +218,40 @@ class Imgur::Client < Cistern::Service
                     "children"  => [],
                   }
 
+                  message = {
+                      id:                   message_id,
+                      from:                 account_name,
+                      account_id:           account_id,
+                      recipient_account_id: account_id,
+                      subject:              'This is a sample message to you (Subject Line)',
+                      body:                 'This is the message body. It\'s what I wanted to say to you',
+                      timestamp:            '1 minute ago',
+                      parent_id:            message_id,
+                  }
+
+                  reply_notification = {
+                      id:         reply_notification_id,
+                      account_id: account_id,
+                      viewed:     false,
+                      content:    comment
+                  }
+
+                  message_notification = {
+                      id:         message_notification_id,
+                      account_id: account_id,
+                      viewed:     false,
+                      content:    message
+                  }
+
                   {
-                    :images   => {image_id   => image},
-                    :accounts => {account_id => account},
-                    :albums   => {album_id   => album},
-                    :comments => {comment_id => comment},
+                    :images        => {image_id   => image},
+                    :accounts      => {account_id => account},
+                    :albums        => {album_id   => album},
+                    :comments      => {comment_id => comment},
+                    :notifications => {
+                        replies:  [reply_notification],
+                        messages: [message_notification]
+                    }
                   }
                 end
     end
