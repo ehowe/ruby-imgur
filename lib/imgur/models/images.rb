@@ -27,7 +27,7 @@ class Imgur::Client::Images < Cistern::Collection
                         raise ArgumentError, "Invalid image value"
                       end
     data = connection.upload_image(options).body["data"]
-    connection.gallery_images.new(data)
+    new(data)
   end
 
   private

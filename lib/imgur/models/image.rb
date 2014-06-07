@@ -24,6 +24,6 @@ class Imgur::Client::Image < Imgur::Model
 
   def add_to_gallery(options = {})
     data = connection.add_to_gallery(id, options).body['data']
-    connection.gallery_images.new(data)
+    new(data)
   end
 end
